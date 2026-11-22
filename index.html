@@ -6,50 +6,127 @@
 <title>Options Probability Calculator</title>
 <style>
 body { font-family: Arial, Helvetica, sans-serif; max-width: 800px; margin: 30px auto; padding: 20px; background: #f5f5f5; }
-.container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-h1 { text-align: center; color: #2e7d32; margin-bottom: 25px; }
+h1 { text-align: center; color: #2e7d32; margin-bottom: 8px; }
+.page-sub { text-align: center; color: #555; margin: 0 0 20px; }
+.container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
+.card-header { display: flex; align-items: flex-start; justify-content: flex-start; gap: 14px; margin-bottom: 18px; }
+.ticker { background: #2e7d32; color: white; font-weight: bold; font-size: 28px; line-height: 1; padding: 10px 14px; border-radius: 6px; letter-spacing: 1px; min-width: 64px; text-align: center; }
+.card-title { display: flex; flex-direction: column; justify-content: center; min-height: 48px; }
+.card-title .subtitle { color: #555; margin: 0; font-size: 16px; }
 .row { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; }
-label { background: #4caf50; color: white; padding: 10px 15px; min-width: 180px; text-align: center; border-radius: 4px; font-weight: bold; }
-input[type="number"], input[type="date"] { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 150px; }
+label { background: #4caf50; color: white; padding: 10px 15px; min-width: 180px; text-align: center; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
+input[type="number"], input[type="date"] { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 150px; box-sizing: border-box; }
 button { background: #2e7d32; color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; margin: 15px auto; display: block; }
 button:hover { background: #1b5e20; }
 .results { margin-top: 25px; }
 .sd-table { display: flex; justify-content: space-between; margin: 15px 0; flex-wrap: wrap; }
-.sd-cell { text-align: center; min-width: 90px; margin: 5px; }
+.sd-cell { text-align: center; min-width: 90px; margin: 5px; flex: 1; }
 .sd-header { background: #4caf50; color: white; padding: 8px; font-weight: bold; border-radius: 4px 4px 0 0; }
 .sd-value { background: #f0f0f0; padding: 10px; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 16px; }
 .prob-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 .prob-box { flex: 1; min-width: 180px; text-align: center; }
 .prob-header { background: #4caf50; color: white; padding: 10px; font-weight: bold; border-radius: 4px 4px 0 0; }
 .prob-value { background: #f0f0f0; padding: 15px; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 20px; font-weight: bold; }
-.note { font-size: 12px; color: #666; text-align: center; margin-top: 20px; }
+.note { font-size: 12px; color: #666; text-align: center; margin-top: 10px; margin-bottom: 10px; }
+@media (max-width: 640px) {
+  body { margin: 10px auto; padding: 12px; }
+  .container { padding: 16px; }
+  .ticker { font-size: 24px; padding: 8px 12px; min-width: 56px; }
+  .row { flex-direction: column; align-items: stretch; gap: 6px; }
+  label { min-width: 0; width: 100%; }
+  input[type="number"], input[type="date"] { width: 100%; }
+  .prob-box { min-width: 100%; }
+  .sd-cell { min-width: calc(33% - 10px); }
+}
 </style>
 </head>
 <body>
+<h1>Options Probability Calculator</h1>
+<p class="page-sub">Friday Nov 20 close · Dec 18 expiration · 26 days ahead</p>
+
 <div class="container">
-  <h1>Options Probability Calculator</h1><p style="text-align:center;color:#555">Ford Dec 18 $11.67 put · Friday Nov 20 close · IV from put mid $0.72</p>
-  <div class="row"><label>Current Price</label><input type="number" id="currentPrice" value="11.17" step="0.01"></div>
-  <div class="row"><label>Future Date</label><input type="date" id="futureDate"></div>
-  <div class="row"><label>Days Ahead</label><input type="number" id="daysAhead" value="26" min="1"></div>
-  <div class="row"><label>Future Volatility</label><input type="number" id="volatility" value="35.9" step="0.1" min="0.1"></div>
-  <div class="row"><label>Break Even</label><input type="number" id="target1" value="11.44" step="0.01"></div>
-  <div class="row"><label>Strike Price</label><input type="number" id="target2" value="11.67" step="0.01"></div>
-  <div class="row"><label>Last Week High</label><input type="number" id="pivHigh" value="11.92" step="0.01"></div>
-  <div class="row"><label>Last Week Low</label><input type="number" id="pivLow" value="11.05" step="0.01"></div>
-  <div class="row"><label>Last Week Close</label><input type="number" id="pivClose" value="11.17" step="0.01"></div>
-  <button onclick="calculate()">GO!</button>
-  <div class="results" id="results" style="display:none;">
-    <h3>Weekly Pivot Points (Support &amp; Resistance)</h3>
-    <div class="sd-table" id="sdTable"></div>
+  <div class="card-header">
+    <div class="ticker">F</div>
+    <div class="card-title"><p class="subtitle">Open Dec 18 $11.67 put</p></div>
+  </div>
+  <div class="row"><label>Current Price</label><input type="number" id="F_currentPrice" value="11.17" step="0.01"></div>
+  <div class="row"><label>Future Date</label><input type="date" id="F_futureDate"></div>
+  <div class="row"><label>Days Ahead</label><input type="number" id="F_daysAhead" value="26" min="1"></div>
+  <div class="row"><label>Future Volatility</label><input type="number" id="F_volatility" value="35.9" step="0.1" min="0.1"></div>
+  <div class="row"><label>Break Even</label><input type="number" id="F_target1" value="11.44" step="0.01"></div>
+  <div class="row"><label>Strike Price</label><input type="number" id="F_target2" value="11.67" step="0.01"></div>
+  <div class="row"><label>Last Week High</label><input type="number" id="F_pivHigh" value="11.92" step="0.01"></div>
+  <div class="row"><label>Last Week Low</label><input type="number" id="F_pivLow" value="11.05" step="0.01"></div>
+  <div class="row"><label>Last Week Close</label><input type="number" id="F_pivClose" value="11.17" step="0.01"></div>
+  <button type="button" onclick="calculate('F_')">GO!</button>
+  <div class="results" id="F_results" style="display:none;">
+    <h3>Weekly Pivot Points (Support & Resistance)</h3>
+    <div class="sd-table" id="F_sdTable"></div>
     <h3>Probability of:</h3>
     <div class="prob-row">
-      <div class="prob-box"><div class="prob-header">Finishing below break even</div><div class="prob-value" id="probBelow"></div></div>
-      <div class="prob-box"><div class="prob-header">Finishing between break even and strike</div><div class="prob-value" id="probBetween"></div></div>
-      <div class="prob-box"><div class="prob-header">Finishing above strike price</div><div class="prob-value" id="probAbove"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing below break even</div><div class="prob-value" id="F_probBelow"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing between break even and strike</div><div class="prob-value" id="F_probBetween"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing above strike price</div><div class="prob-value" id="F_probAbove"></div></div>
     </div>
   </div>
-  <div class="note">Based on lognormal price distribution. Pivot = (High + Low + Close) / 3 from last week.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.</div>
 </div>
+
+<div class="container">
+  <div class="card-header">
+    <div class="ticker">PFE</div>
+    <div class="card-title"><p class="subtitle">Example: Dec 18 $26 put, mid $0.345</p></div>
+  </div>
+  <div class="row"><label>Current Price</label><input type="number" id="PFE_currentPrice" value="27.40" step="0.01"></div>
+  <div class="row"><label>Future Date</label><input type="date" id="PFE_futureDate"></div>
+  <div class="row"><label>Days Ahead</label><input type="number" id="PFE_daysAhead" value="26" min="1"></div>
+  <div class="row"><label>Future Volatility</label><input type="number" id="PFE_volatility" value="31.64" step="0.01" min="0.1"></div>
+  <div class="row"><label>Break Even</label><input type="number" id="PFE_target1" value="25.655" step="0.001"></div>
+  <div class="row"><label>Strike Price</label><input type="number" id="PFE_target2" value="26.00" step="0.01"></div>
+  <div class="row"><label>Last Week High</label><input type="number" id="PFE_pivHigh" value="29.28" step="0.01"></div>
+  <div class="row"><label>Last Week Low</label><input type="number" id="PFE_pivLow" value="27.35" step="0.01"></div>
+  <div class="row"><label>Last Week Close</label><input type="number" id="PFE_pivClose" value="27.40" step="0.01"></div>
+  <button type="button" onclick="calculate('PFE_')">GO!</button>
+  <div class="results" id="PFE_results" style="display:none;">
+    <h3>Weekly Pivot Points (Support & Resistance)</h3>
+    <div class="sd-table" id="PFE_sdTable"></div>
+    <h3>Probability of:</h3>
+    <div class="prob-row">
+      <div class="prob-box"><div class="prob-header">Finishing below break even</div><div class="prob-value" id="PFE_probBelow"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing between break even and strike</div><div class="prob-value" id="PFE_probBetween"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing above strike price</div><div class="prob-value" id="PFE_probAbove"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card-header">
+    <div class="ticker">T</div>
+    <div class="card-title"><p class="subtitle">Example: Dec 18 $21 put, mid $0.24</p></div>
+  </div>
+  <div class="row"><label>Current Price</label><input type="number" id="T_currentPrice" value="22.31" step="0.01"></div>
+  <div class="row"><label>Future Date</label><input type="date" id="T_futureDate"></div>
+  <div class="row"><label>Days Ahead</label><input type="number" id="T_daysAhead" value="26" min="1"></div>
+  <div class="row"><label>Future Volatility</label><input type="number" id="T_volatility" value="31.76" step="0.01" min="0.1"></div>
+  <div class="row"><label>Break Even</label><input type="number" id="T_target1" value="20.76" step="0.01"></div>
+  <div class="row"><label>Strike Price</label><input type="number" id="T_target2" value="21.00" step="0.01"></div>
+  <div class="row"><label>Last Week High</label><input type="number" id="T_pivHigh" value="22.75" step="0.01"></div>
+  <div class="row"><label>Last Week Low</label><input type="number" id="T_pivLow" value="21.52" step="0.01"></div>
+  <div class="row"><label>Last Week Close</label><input type="number" id="T_pivClose" value="22.31" step="0.01"></div>
+  <button type="button" onclick="calculate('T_')">GO!</button>
+  <div class="results" id="T_results" style="display:none;">
+    <h3>Weekly Pivot Points (Support & Resistance)</h3>
+    <div class="sd-table" id="T_sdTable"></div>
+    <h3>Probability of:</h3>
+    <div class="prob-row">
+      <div class="prob-box"><div class="prob-header">Finishing below break even</div><div class="prob-value" id="T_probBelow"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing between break even and strike</div><div class="prob-value" id="T_probBetween"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing above strike price</div><div class="prob-value" id="T_probAbove"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="note">Based on lognormal price distribution. Pivot = (High + Low + Close) / 3 from last week.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.<br>Ford is the open trade. Pfizer and AT&T are example contracts, not open trades.</div>
+
 <script>
 function normalCDF(x) { return 0.5 * (1 + erf(x / Math.sqrt(2))); }
 function erf(x) {
@@ -59,44 +136,55 @@ function erf(x) {
   const y = 1.0 - (((((a5*t + a4)*t + a3)*t + a2)*t + a1)*t * Math.exp(-x*x));
   return sign * y;
 }
-document.getElementById('futureDate').addEventListener('change', function() {
-  const date = new Date(this.value); const today = new Date(); today.setHours(0,0,0,0);
-  const diff = Math.round((date - today) / (1000*60*60*24));
-  if (diff > 0) document.getElementById('daysAhead').value = diff;
-});
-document.getElementById('daysAhead').addEventListener('input', function() {
-  const days = parseInt(this.value);
-  if (days > 0) { const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); document.getElementById('futureDate').valueAsDate = future; }
-});
+function el(prefix, id) { return document.getElementById(prefix + id); }
+function bindCard(prefix) {
+  el(prefix, 'futureDate').addEventListener('change', function() {
+    const date = new Date(this.value); const today = new Date(); today.setHours(0,0,0,0);
+    const diff = Math.round((date - today) / (1000*60*60*24));
+    if (diff > 0) el(prefix, 'daysAhead').value = diff;
+  });
+  el(prefix, 'daysAhead').addEventListener('input', function() {
+    const days = parseInt(this.value);
+    if (days > 0) { const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); el(prefix, 'futureDate').valueAsDate = future; }
+  });
+}
+function initDate(prefix, days) {
+  const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); el(prefix, 'futureDate').valueAsDate = future;
+}
 window.onload = function() {
-  const days = 26; const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); document.getElementById('futureDate').valueAsDate = future;
-  calculate();
+  const prefixes = ['F_', 'PFE_', 'T_'];
+  const days = 26;
+  prefixes.forEach(function(prefix) {
+    bindCard(prefix);
+    initDate(prefix, days);
+    calculate(prefix);
+  });
 };
-function calculate() {
-  const S = parseFloat(document.getElementById('currentPrice').value);
-  const days = parseInt(document.getElementById('daysAhead').value);
-  const vol = parseFloat(document.getElementById('volatility').value);
-  let t1 = parseFloat(document.getElementById('target1').value);
-  let t2 = parseFloat(document.getElementById('target2').value);
+function calculate(prefix) {
+  const S = parseFloat(el(prefix, 'currentPrice').value);
+  const days = parseInt(el(prefix, 'daysAhead').value);
+  const vol = parseFloat(el(prefix, 'volatility').value);
+  let t1 = parseFloat(el(prefix, 'target1').value);
+  let t2 = parseFloat(el(prefix, 'target2').value);
   if (isNaN(S) || isNaN(days) || isNaN(vol) || days <= 0 || vol <= 0) { alert('Please enter valid positive numbers.'); return; }
   const low = Math.min(t1, t2); const high = Math.max(t1, t2);
   const sigma = (vol / 100) * Math.sqrt(days / 365.25);
-  const H = parseFloat(document.getElementById('pivHigh').value);
-  const L = parseFloat(document.getElementById('pivLow').value);
-  const C = parseFloat(document.getElementById('pivClose').value);
+  const H = parseFloat(el(prefix, 'pivHigh').value);
+  const L = parseFloat(el(prefix, 'pivLow').value);
+  const C = parseFloat(el(prefix, 'pivClose').value);
   let sdHtml = '';
   if (!isNaN(H) && !isNaN(L) && !isNaN(C)) {
     const P = (H + L + C) / 3;
     const piv = [['S2', P - (H - L)], ['S1', 2*P - H], ['Pivot', P], ['R1', 2*P - L], ['R2', P + (H - L)]];
     piv.forEach(([n, v]) => { sdHtml += `<div class="sd-cell"><div class="sd-header">${n}</div><div class="sd-value">${v.toFixed(2)}</div></div>`; });
   }
-  document.getElementById('sdTable').innerHTML = sdHtml;
+  el(prefix, 'sdTable').innerHTML = sdHtml;
   const zLow = Math.log(low / S) / sigma; const zHigh = Math.log(high / S) / sigma;
   const pBelow = normalCDF(zLow)*100; const pAbove = (1-normalCDF(zHigh))*100; const pBetween = (normalCDF(zHigh)-normalCDF(zLow))*100;
-  document.getElementById('probBelow').textContent = pBelow.toFixed(3);
-  document.getElementById('probBetween').textContent = pBetween.toFixed(3);
-  document.getElementById('probAbove').textContent = pAbove.toFixed(3);
-  document.getElementById('results').style.display = 'block';
+  el(prefix, 'probBelow').textContent = pBelow.toFixed(3);
+  el(prefix, 'probBetween').textContent = pBetween.toFixed(3);
+  el(prefix, 'probAbove').textContent = pAbove.toFixed(3);
+  el(prefix, 'results').style.display = 'block';
 }
 </script>
 </body>
