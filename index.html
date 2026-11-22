@@ -45,6 +45,7 @@ button:hover { background: var(--darker); }
 .card-f { --main: #4caf50; --dark: #2e7d32; --darker: #1b5e20; }
 .card-pfe { --main: #1e88e5; --dark: #1565c0; --darker: #0d47a1; }
 .card-t { --main: #8e24aa; --dark: #6a1b9a; --darker: #4a148c; }
+.hlc { margin: 4px 0 0; font-size: 15px; font-weight: bold; color: var(--dark); }
 </style>
 </head>
 <body>
@@ -54,7 +55,7 @@ button:hover { background: var(--darker); }
 <div class="container card-f">
   <div class="card-header">
     <div class="ticker">F</div>
-    <div class="card-title"><p class="subtitle">Open Dec 18 $11.67 put</p></div>
+    <div class="card-title"><p class="subtitle">Open Dec 18 $11.67 put</p><p class="hlc" id="F_hlc"></p></div>
   </div>
   <div class="row"><label>Current Price</label><input type="number" id="F_currentPrice" value="11.17" step="0.01"></div>
   <div class="row"><label>Future Date</label><input type="date" id="F_futureDate"></div>
@@ -62,9 +63,9 @@ button:hover { background: var(--darker); }
   <div class="row"><label>Future Volatility</label><input type="number" id="F_volatility" value="35.9" step="0.1" min="0.1"></div>
   <div class="row"><label>Break Even</label><input type="number" id="F_target1" value="11.44" step="0.01"></div>
   <div class="row"><label>Strike Price</label><input type="number" id="F_target2" value="11.67" step="0.01"></div>
-  <div class="row"><label>Last Week High</label><input type="number" id="F_pivHigh" value="11.92" step="0.01"></div>
-  <div class="row"><label>Last Week Low</label><input type="number" id="F_pivLow" value="11.05" step="0.01"></div>
-  <div class="row"><label>Last Week Close</label><input type="number" id="F_pivClose" value="11.17" step="0.01"></div>
+  <input type="hidden" id="F_pivHigh" value="11.92">
+  <input type="hidden" id="F_pivLow" value="11.05">
+  <input type="hidden" id="F_pivClose" value="11.17">
   <button type="button" onclick="calculate('F_')">GO!</button>
   <div class="results" id="F_results" style="display:none;">
     <h3>Weekly Pivot Points (Support & Resistance)</h3>
@@ -81,7 +82,7 @@ button:hover { background: var(--darker); }
 <div class="container card-pfe">
   <div class="card-header">
     <div class="ticker">PFE</div>
-    <div class="card-title"><p class="subtitle">Example: Dec 18 $26 put, mid $0.345</p></div>
+    <div class="card-title"><p class="subtitle">Example: Dec 18 $26 put, mid $0.345</p><p class="hlc" id="PFE_hlc"></p></div>
   </div>
   <div class="row"><label>Current Price</label><input type="number" id="PFE_currentPrice" value="27.40" step="0.01"></div>
   <div class="row"><label>Future Date</label><input type="date" id="PFE_futureDate"></div>
@@ -89,9 +90,9 @@ button:hover { background: var(--darker); }
   <div class="row"><label>Future Volatility</label><input type="number" id="PFE_volatility" value="31.64" step="0.01" min="0.1"></div>
   <div class="row"><label>Break Even</label><input type="number" id="PFE_target1" value="25.655" step="0.001"></div>
   <div class="row"><label>Strike Price</label><input type="number" id="PFE_target2" value="26.00" step="0.01"></div>
-  <div class="row"><label>Last Week High</label><input type="number" id="PFE_pivHigh" value="29.28" step="0.01"></div>
-  <div class="row"><label>Last Week Low</label><input type="number" id="PFE_pivLow" value="27.35" step="0.01"></div>
-  <div class="row"><label>Last Week Close</label><input type="number" id="PFE_pivClose" value="27.40" step="0.01"></div>
+  <input type="hidden" id="PFE_pivHigh" value="29.28">
+  <input type="hidden" id="PFE_pivLow" value="27.35">
+  <input type="hidden" id="PFE_pivClose" value="27.40">
   <button type="button" onclick="calculate('PFE_')">GO!</button>
   <div class="results" id="PFE_results" style="display:none;">
     <h3>Weekly Pivot Points (Support & Resistance)</h3>
@@ -108,7 +109,7 @@ button:hover { background: var(--darker); }
 <div class="container card-t">
   <div class="card-header">
     <div class="ticker">T</div>
-    <div class="card-title"><p class="subtitle">Example: Dec 18 $21 put, mid $0.24</p></div>
+    <div class="card-title"><p class="subtitle">Example: Dec 18 $21 put, mid $0.24</p><p class="hlc" id="T_hlc"></p></div>
   </div>
   <div class="row"><label>Current Price</label><input type="number" id="T_currentPrice" value="22.31" step="0.01"></div>
   <div class="row"><label>Future Date</label><input type="date" id="T_futureDate"></div>
@@ -116,9 +117,9 @@ button:hover { background: var(--darker); }
   <div class="row"><label>Future Volatility</label><input type="number" id="T_volatility" value="31.76" step="0.01" min="0.1"></div>
   <div class="row"><label>Break Even</label><input type="number" id="T_target1" value="20.76" step="0.01"></div>
   <div class="row"><label>Strike Price</label><input type="number" id="T_target2" value="21.00" step="0.01"></div>
-  <div class="row"><label>Last Week High</label><input type="number" id="T_pivHigh" value="22.75" step="0.01"></div>
-  <div class="row"><label>Last Week Low</label><input type="number" id="T_pivLow" value="21.52" step="0.01"></div>
-  <div class="row"><label>Last Week Close</label><input type="number" id="T_pivClose" value="22.31" step="0.01"></div>
+  <input type="hidden" id="T_pivHigh" value="22.75">
+  <input type="hidden" id="T_pivLow" value="21.52">
+  <input type="hidden" id="T_pivClose" value="22.31">
   <button type="button" onclick="calculate('T_')">GO!</button>
   <div class="results" id="T_results" style="display:none;">
     <h3>Weekly Pivot Points (Support & Resistance)</h3>
@@ -179,6 +180,7 @@ function calculate(prefix) {
   const H = parseFloat(el(prefix, 'pivHigh').value);
   const L = parseFloat(el(prefix, 'pivLow').value);
   const C = parseFloat(el(prefix, 'pivClose').value);
+  const hlcEl = el(prefix, 'hlc'); if (hlcEl) hlcEl.textContent = `Last week: High ${H.toFixed(2)} · Low ${L.toFixed(2)} · Close ${C.toFixed(2)}`;
   let sdHtml = '';
   if (!isNaN(H) && !isNaN(L) && !isNaN(C)) {
     const P = (H + L + C) / 3;
