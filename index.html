@@ -34,9 +34,12 @@ button:hover { background: #1b5e20; }
   <div class="row"><label>Future Volatility</label><input type="number" id="volatility" value="35.9" step="0.1" min="0.1"></div>
   <div class="row"><label>Break Even</label><input type="number" id="target1" value="11.44" step="0.01"></div>
   <div class="row"><label>Strike Price</label><input type="number" id="target2" value="11.67" step="0.01"></div>
+  <div class="row"><label>Last Week High</label><input type="number" id="pivHigh" value="11.92" step="0.01"></div>
+  <div class="row"><label>Last Week Low</label><input type="number" id="pivLow" value="11.05" step="0.01"></div>
+  <div class="row"><label>Last Week Close</label><input type="number" id="pivClose" value="11.17" step="0.01"></div>
   <button onclick="calculate()">GO!</button>
   <div class="results" id="results" style="display:none;">
-    <h3>Price at Each Standard Deviation</h3>
+    <h3>Weekly Pivot Points (Support &amp; Resistance)</h3>
     <div class="sd-table" id="sdTable"></div>
     <h3>Probability of:</h3>
     <div class="prob-row">
@@ -45,7 +48,7 @@ button:hover { background: #1b5e20; }
       <div class="prob-box"><div class="prob-header">Finishing above strike price</div><div class="prob-value" id="probAbove"></div></div>
     </div>
   </div>
-  <div class="note">Based on lognormal price distribution. SD levels use linear approximation.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.</div>
+  <div class="note">Based on lognormal price distribution. Pivot = (High + Low + Close) / 3 from last week.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.</div>
 </div>
 <script>
 function normalCDF(x) { return 0.5 * (1 + erf(x / Math.sqrt(2))); }
@@ -78,9 +81,15 @@ function calculate() {
   if (isNaN(S) || isNaN(days) || isNaN(vol) || days <= 0 || vol <= 0) { alert('Please enter valid positive numbers.'); return; }
   const low = Math.min(t1, t2); const high = Math.max(t1, t2);
   const sigma = (vol / 100) * Math.sqrt(days / 365.25);
-  const levels = [-3,-2,-1,1,2,3];
+  const H = parseFloat(document.getElementById('pivHigh').value);
+  const L = parseFloat(document.getElementById('pivLow').value);
+  const C = parseFloat(document.getElementById('pivClose').value);
   let sdHtml = '';
-  levels.forEach(n => { const price = S * (1 + n * sigma); sdHtml += `<div class="sd-cell"><div class="sd-header">${n>0?'+':''}${n}</div><div class="sd-value">${price.toFixed(3)}</div></div>`; });
+  if (!isNaN(H) && !isNaN(L) && !isNaN(C)) {
+    const P = (H + L + C) / 3;
+    const piv = [['S2', P - (H - L)], ['S1', 2*P - H], ['Pivot', P], ['R1', 2*P - L], ['R2', P + (H - L)]];
+    piv.forEach(([n, v]) => { sdHtml += `<div class="sd-cell"><div class="sd-header">${n}</div><div class="sd-value">${v.toFixed(2)}</div></div>`; });
+  }
   document.getElementById('sdTable').innerHTML = sdHtml;
   const zLow = Math.log(low / S) / sigma; const zHigh = Math.log(high / S) / sigma;
   const pBelow = normalCDF(zLow)*100; const pAbove = (1-normalCDF(zHigh))*100; const pBetween = (normalCDF(zHigh)-normalCDF(zLow))*100;
