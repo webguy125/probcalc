@@ -7,26 +7,26 @@
 <style>
 body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 14px; background: #f5f5f5; box-sizing: border-box; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
 h1, .page-sub, .note { grid-column: 1 / -1; }
-h1 { text-align: center; color: #2e7d32; margin-bottom: 8px; }
+h1 { text-align: center; color: #37474f; margin-bottom: 8px; }
 .page-sub { text-align: center; color: #555; margin: 0 0 20px; }
 .container { background: white; padding: 16px; margin-bottom: 0 !important; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
 .card-header { display: flex; align-items: flex-start; justify-content: flex-start; gap: 14px; margin-bottom: 18px; }
-.ticker { background: #2e7d32; color: white; font-weight: bold; font-size: 28px; line-height: 1; padding: 10px 14px; border-radius: 6px; letter-spacing: 1px; min-width: 64px; text-align: center; }
+.ticker { background: var(--dark); color: white; font-weight: bold; font-size: 28px; line-height: 1; padding: 10px 14px; border-radius: 6px; letter-spacing: 1px; min-width: 64px; text-align: center; }
 .card-title { display: flex; flex-direction: column; justify-content: center; min-height: 48px; }
 .card-title .subtitle { color: #555; margin: 0; font-size: 16px; }
 .row { display: flex; align-items: center; margin-bottom: 8px; gap: 8px; }
-label { background: #4caf50; color: white; padding: 8px 8px; flex: 1; min-width: 0; font-size: 14px; text-align: center; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
+label { background: var(--main); color: white; padding: 8px 8px; flex: 1; min-width: 0; font-size: 14px; text-align: center; border-radius: 4px; font-weight: bold; box-sizing: border-box; }
 input[type="number"], input[type="date"] { padding: 8px; font-size: 15px; border: 1px solid #ccc; border-radius: 4px; width: 45%; box-sizing: border-box; }
-button { background: #2e7d32; color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; margin: 15px auto; display: block; }
-button:hover { background: #1b5e20; }
+button { background: var(--dark); color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; margin: 15px auto; display: block; }
+button:hover { background: var(--darker); }
 .results { margin-top: 25px; }
 .sd-table { display: flex; justify-content: space-between; margin: 15px 0; flex-wrap: wrap; }
 .sd-cell { text-align: center; min-width: 0; margin: 3px; flex: 1; }
-.sd-header { background: #4caf50; color: white; padding: 6px 2px; font-size: 13px; font-weight: bold; border-radius: 4px 4px 0 0; }
+.sd-header { background: var(--main); color: white; padding: 6px 2px; font-size: 13px; font-weight: bold; border-radius: 4px 4px 0 0; }
 .sd-value { background: #f0f0f0; padding: 8px 2px; font-size: 14px !important; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 16px; }
 .prob-row { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
 .prob-box { text-align: center; }
-.prob-header { background: #4caf50; color: white; padding: 7px; font-size: 14px; font-weight: bold; border-radius: 4px 4px 0 0; }
+.prob-header { background: var(--main); color: white; padding: 7px; font-size: 14px; font-weight: bold; border-radius: 4px 4px 0 0; }
 .prob-value { background: #f0f0f0; padding: 8px; font-size: 18px !important; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 20px; font-weight: bold; }
 .note { font-size: 12px; color: #666; text-align: center; margin-top: 10px; margin-bottom: 10px; }
 @media (max-width: 900px) {
@@ -41,13 +41,17 @@ button:hover { background: #1b5e20; }
   .prob-box { min-width: 100%; }
   .sd-cell { min-width: calc(33% - 10px); }
 }
+.container { --main: #4caf50; --dark: #2e7d32; --darker: #1b5e20; border-top: 6px solid var(--dark); }
+.card-f { --main: #4caf50; --dark: #2e7d32; --darker: #1b5e20; }
+.card-pfe { --main: #1e88e5; --dark: #1565c0; --darker: #0d47a1; }
+.card-t { --main: #8e24aa; --dark: #6a1b9a; --darker: #4a148c; }
 </style>
 </head>
 <body>
 <h1>Options Probability Calculator</h1>
 <p class="page-sub">Friday Nov 20 close · Dec 18 expiration · 26 days ahead</p>
 
-<div class="container">
+<div class="container card-f">
   <div class="card-header">
     <div class="ticker">F</div>
     <div class="card-title"><p class="subtitle">Open Dec 18 $11.67 put</p></div>
@@ -74,7 +78,7 @@ button:hover { background: #1b5e20; }
   </div>
 </div>
 
-<div class="container">
+<div class="container card-pfe">
   <div class="card-header">
     <div class="ticker">PFE</div>
     <div class="card-title"><p class="subtitle">Example: Dec 18 $26 put, mid $0.345</p></div>
@@ -101,7 +105,7 @@ button:hover { background: #1b5e20; }
   </div>
 </div>
 
-<div class="container">
+<div class="container card-t">
   <div class="card-header">
     <div class="ticker">T</div>
     <div class="card-title"><p class="subtitle">Example: Dec 18 $21 put, mid $0.24</p></div>
