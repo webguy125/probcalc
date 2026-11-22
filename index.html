@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Options Probability Calculator</title>
+<style>
+body { font-family: Arial, Helvetica, sans-serif; max-width: 800px; margin: 30px auto; padding: 20px; background: #f5f5f5; }
+.container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { text-align: center; color: #2e7d32; margin-bottom: 25px; }
+.row { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; }
+label { background: #4caf50; color: white; padding: 10px 15px; min-width: 180px; text-align: center; border-radius: 4px; font-weight: bold; }
+input[type="number"], input[type="date"] { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; width: 150px; }
+button { background: #2e7d32; color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; margin: 15px auto; display: block; }
+button:hover { background: #1b5e20; }
+.results { margin-top: 25px; }
+.sd-table { display: flex; justify-content: space-between; margin: 15px 0; flex-wrap: wrap; }
+.sd-cell { text-align: center; min-width: 90px; margin: 5px; }
+.sd-header { background: #4caf50; color: white; padding: 8px; font-weight: bold; border-radius: 4px 4px 0 0; }
+.sd-value { background: #f0f0f0; padding: 10px; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 16px; }
+.prob-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+.prob-box { flex: 1; min-width: 180px; text-align: center; }
+.prob-header { background: #4caf50; color: white; padding: 10px; font-weight: bold; border-radius: 4px 4px 0 0; }
+.prob-value { background: #f0f0f0; padding: 15px; border: 1px solid #ddd; border-radius: 0 0 4px 4px; font-size: 20px; font-weight: bold; }
+.note { font-size: 12px; color: #666; text-align: center; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Options Probability Calculator</h1><p style="text-align:center;color:#555">Ford Dec 18 $11.67 put · Friday Nov 20 close · IV from put mid $0.72</p>
+  <div class="row"><label>Current Price</label><input type="number" id="currentPrice" value="11.17" step="0.01"></div>
+  <div class="row"><label>Future Date</label><input type="date" id="futureDate"></div>
+  <div class="row"><label>Days Ahead</label><input type="number" id="daysAhead" value="26" min="1"></div>
+  <div class="row"><label>Future Volatility</label><input type="number" id="volatility" value="35.9" step="0.1" min="0.1"></div>
+  <div class="row"><label>First Target</label><input type="number" id="target1" value="11.44" step="0.01"></div>
+  <div class="row"><label>Second Target</label><input type="number" id="target2" value="11.67" step="0.01"></div>
+  <button onclick="calculate()">GO!</button>
+  <div class="results" id="results" style="display:none;">
+    <h3>Price at Each Standard Deviation</h3>
+    <div class="sd-table" id="sdTable"></div>
+    <h3>Probability of:</h3>
+    <div class="prob-row">
+      <div class="prob-box"><div class="prob-header">Finishing below lowest target</div><div class="prob-value" id="probBelow"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing between two targets</div><div class="prob-value" id="probBetween"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing above highest target</div><div class="prob-value" id="probAbove"></div></div>
+    </div>
+  </div>
+  <div class="note">Based on lognormal price distribution. SD levels use linear approximation.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.</div>
+</div>
+<script>
+function normalCDF(x) { return 0.5 * (1 + erf(x / Math.sqrt(2))); }
+function erf(x) {
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const sign = x < 0 ? -1 : 1; x = Math.abs(x);
+  const t = 1.0 / (1.0 + p * x);
+  const y = 1.0 - (((((a5*t + a4)*t + a3)*t + a2)*t + a1)*t * Math.exp(-x*x));
+  return sign * y;
+}
+document.getElementById('futureDate').addEventListener('change', function() {
+  const date = new Date(this.value); const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((date - today) / (1000*60*60*24));
+  if (diff > 0) document.getElementById('daysAhead').value = diff;
+});
+document.getElementById('daysAhead').addEventListener('input', function() {
+  const days = parseInt(this.value);
+  if (days > 0) { const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); document.getElementById('futureDate').valueAsDate = future; }
+});
+window.onload = function() {
+  const days = 26; const today = new Date(); today.setHours(0,0,0,0); const future = new Date(today); future.setDate(future.getDate() + days); document.getElementById('futureDate').valueAsDate = future;
+  calculate();
+};
+function calculate() {
+  const S = parseFloat(document.getElementById('currentPrice').value);
+  const days = parseInt(document.getElementById('daysAhead').value);
+  const vol = parseFloat(document.getElementById('volatility').value);
+  let t1 = parseFloat(document.getElementById('target1').value);
+  let t2 = parseFloat(document.getElementById('target2').value);
+  if (isNaN(S) || isNaN(days) || isNaN(vol) || days <= 0 || vol <= 0) { alert('Please enter valid positive numbers.'); return; }
+  const low = Math.min(t1, t2); const high = Math.max(t1, t2);
+  const sigma = (vol / 100) * Math.sqrt(days / 365.25);
+  const levels = [-3,-2,-1,1,2,3];
+  let sdHtml = '';
+  levels.forEach(n => { const price = S * (1 + n * sigma); sdHtml += `<div class="sd-cell"><div class="sd-header">${n>0?'+':''}${n}</div><div class="sd-value">${price.toFixed(3)}</div></div>`; });
+  document.getElementById('sdTable').innerHTML = sdHtml;
+  const zLow = Math.log(low / S) / sigma; const zHigh = Math.log(high / S) / sigma;
+  const pBelow = normalCDF(zLow)*100; const pAbove = (1-normalCDF(zHigh))*100; const pBetween = (normalCDF(zHigh)-normalCDF(zLow))*100;
+  document.getElementById('probBelow').textContent = pBelow.toFixed(3);
+  document.getElementById('probBetween').textContent = pBetween.toFixed(3);
+  document.getElementById('probAbove').textContent = pAbove.toFixed(3);
+  document.getElementById('results').style.display = 'block';
+}
+</script>
+</body>
+</html>
