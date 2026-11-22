@@ -32,17 +32,17 @@ button:hover { background: #1b5e20; }
   <div class="row"><label>Future Date</label><input type="date" id="futureDate"></div>
   <div class="row"><label>Days Ahead</label><input type="number" id="daysAhead" value="26" min="1"></div>
   <div class="row"><label>Future Volatility</label><input type="number" id="volatility" value="35.9" step="0.1" min="0.1"></div>
-  <div class="row"><label>First Target</label><input type="number" id="target1" value="11.67" step="0.01"></div>
-  <div class="row"><label>Second Target</label><input type="number" id="target2" value="11.67" step="0.01"></div>
+  <div class="row"><label>First Strike Price</label><input type="number" id="target1" value="11.67" step="0.01"></div>
+  <div class="row"><label>Second Strike Price</label><input type="number" id="target2" value="11.67" step="0.01"></div>
   <button onclick="calculate()">GO!</button>
   <div class="results" id="results" style="display:none;">
     <h3>Price at Each Standard Deviation</h3>
     <div class="sd-table" id="sdTable"></div>
     <h3>Probability of:</h3>
     <div class="prob-row">
-      <div class="prob-box"><div class="prob-header">Finishing below lowest target</div><div class="prob-value" id="probBelow"></div></div>
-      <div class="prob-box"><div class="prob-header">Finishing between two targets</div><div class="prob-value" id="probBetween"></div></div>
-      <div class="prob-box"><div class="prob-header">Finishing above highest target</div><div class="prob-value" id="probAbove"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing below lowest strike</div><div class="prob-value" id="probBelow"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing between the two strikes</div><div class="prob-value" id="probBetween"></div></div>
+      <div class="prob-box"><div class="prob-header">Finishing above highest strike</div><div class="prob-value" id="probAbove"></div></div>
     </div>
   </div>
   <div class="note">Based on lognormal price distribution. SD levels use linear approximation.<br>Volatility entered as whole number (e.g. 53.7 for 53.7%). Year basis: 365.25 days.</div>
